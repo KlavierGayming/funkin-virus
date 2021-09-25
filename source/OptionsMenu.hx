@@ -6,6 +6,9 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 //import Config;
+#if windows
+import Discord.DiscordClient;
+#end
 
 import flixel.util.FlxSave;
 
@@ -16,7 +19,7 @@ class OptionsMenu extends MusicBeatState
 
 	private var grpControls:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['options', 'misc', 'credits', 'achievements', 'exit'];
+	var menuItems:Array<String> = ['options', 'misc', 'achievements', 'exit'];
 
 	var notice:FlxText;
 
@@ -30,6 +33,10 @@ class OptionsMenu extends MusicBeatState
 		menuBG.screenCenter();
 		menuBG.antialiasing = true;
 		add(menuBG);
+		#if windows
+		if (FlxG.save.data.discordPresence)
+			DiscordClient.changePresence("Setting up options", null);
+		#end
 
 		grpControls = new FlxTypedGroup<Alphabet>();
 		add(grpControls);

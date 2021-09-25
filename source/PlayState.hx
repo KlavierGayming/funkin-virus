@@ -305,7 +305,7 @@ class PlayState extends MusicBeatState
 
 	
 	var fallenCrap=false;
-	var virusCrap=true;
+	var virusCrap=false;
 
 	var halloweenLevel:Bool = false;
 
@@ -766,7 +766,7 @@ class PlayState extends MusicBeatState
 					var skoy:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.image('8bit/skoy','shared'));
 					skoy.scrollFactor.set(0.9, 0.9);
 					skoy.scale.set(6, 6);
-					add(skoy);
+					//add(skoy);
 					var flot:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.image('8bit/crap','shared'));
 					flot.scrollFactor.set(0.9, 0.9);
 					flot.scale.set(6, 6);
@@ -994,7 +994,7 @@ class PlayState extends MusicBeatState
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 			case 'bit':
 				dad.x += 100;
-				dad.y += 300;
+				dad.y += 350;
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 				if (SONG.song.toLowerCase() == 'disco'){
 					virusMan.setPosition(200,520);
@@ -1130,7 +1130,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.06 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
+		FlxG.camera.follow(camFollow, LOCKON, 0.14);
 
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -1252,17 +1252,6 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 		iconP2.y -= 30;
-		var overlayy:FlxSprite;
-
-		if (cool){
-			overlayy = new FlxSprite(0,-10).loadGraphic(Paths.image('8bit/overlay','shared'));
-			overlayy.scale.set(1,1.1);
-			overlayy.screenCenter(X);
-			overlayy.alpha = 0.6;
-			overlayy.updateHitbox();
-			overlayy.cameras = [camHUD];
-			add(overlayy);
-		}
 
 		strumLineNotes.cameras = [camHUDNOTES];
 		grpNoteSplashes.cameras = [camHUDNOTES];
@@ -2863,17 +2852,17 @@ class PlayState extends MusicBeatState
 					case 'darkroom' | 'void':
 						switch (boyfriend.animation.curAnim.name){
 							case 'singRIGHT':
-								camFollow.x = boyfriend.getMidpoint().x - 450;
+								camFollow.x = boyfriend.getMidpoint().x - 435;
 								camFollow.y = boyfriend.getMidpoint().y - 370;
 							case 'singLEFT':
-								camFollow.x = boyfriend.getMidpoint().x - 480;
+								camFollow.x = boyfriend.getMidpoint().x - 465;
 								camFollow.y = boyfriend.getMidpoint().y - 370;
 							case 'singDOWN':
 								camFollow.x = boyfriend.getMidpoint().x - 460;
-								camFollow.y = boyfriend.getMidpoint().y - 360;
+								camFollow.y = boyfriend.getMidpoint().y - 345;
 							case 'singUP':
 								camFollow.x = boyfriend.getMidpoint().x - 460;
-								camFollow.y = boyfriend.getMidpoint().y - 390;
+								camFollow.y = boyfriend.getMidpoint().y - 405;
 							default:
 								camFollow.x = boyfriend.getMidpoint().x - 460;
 								camFollow.y = boyfriend.getMidpoint().y - 370;
@@ -3659,20 +3648,35 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 1;
 				sicks++;
 				var recycledNote = grpNoteSplashes.recycle(NoteSplash);
-				switch (daNote.noteData){
-					case 1:
-						recycledNote.setupNoteSplash(daNote.x + 20, strumLine.y + 20, 1);
-						//Note.swagWidth * 2;
-					case 2:
-						recycledNote.setupNoteSplash(daNote.x + 20, strumLine.y + 20, 2);
-					case 3:
-						recycledNote.setupNoteSplash(daNote.x + 20, strumLine.y + 20, 3);
-					case 0:
-						recycledNote.setupNoteSplash(daNote.x + 20, strumLine.y + 20, 0);
-					default:
-						recycledNote.setupNoteSplash(daNote.x + 20, strumLine.y + 20, 0);
-				}//shortcut #2
-				
+				if (PlayStateChangeables.useDownscroll){
+					switch (daNote.noteData){
+						case 1:
+							recycledNote.setupNoteSplash(daNote.x + 40,strumLine.y + 40, 1);
+							//Note.swagWidth * 2;
+						case 2:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 40, 2);
+						case 3:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 40, 3);
+						case 0:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 40, 0);
+						default:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 40, 0);
+					}//shortcut #2
+				}else{
+					switch (daNote.noteData){
+						case 1:
+							recycledNote.setupNoteSplash(daNote.x + 40,strumLine.y + 60, 1);
+							//Note.swagWidth * 2;
+						case 2:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 60, 2);
+						case 3:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 60, 3);
+						case 0:
+							recycledNote.setupNoteSplash(daNote.x + 40, strumLine.y + 60, 0);
+						default:
+							recycledNote.setupNoteSplash(daNote.x + 60, strumLine.y + 60, 0);
+					}//shortcut #2
+				}
 				grpNoteSplashes.add(recycledNote);
 		}
 
@@ -4521,21 +4525,27 @@ class PlayState extends MusicBeatState
 				switch (songLowercase){
 					case "disco":
 						switch (curStep){
+							case 350:
+								warnAss();
 							case 380:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(2);
 								else
 									changeScroll(1);
+							case 481:
+								warnAss();
 							case 511:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(1);
 								else
 									changeScroll(2);
+							//case 608:
+								//warnAss();
 							case 638:
 								remove(dad);
 								dad = new Character(100,100, "fake");
 								dad.x += 100;
-								dad.y += 300;
+								dad.y += 350;
 								add(dad);//shortcut #8
 								dad.playAnim("tremble",true);
 								SONG.forceDad = true;
@@ -4555,6 +4565,8 @@ class PlayState extends MusicBeatState
 							case 660:
 								bg.visible = true;
 								things.visible = true;
+							case 642:
+								warnAss();
 							case 672:
 								defaultCamZoom -= 0.3;
 								bg.visible = true;
@@ -4569,48 +4581,65 @@ class PlayState extends MusicBeatState
 								SONG.forceDad = true;
 							case 800:
 								SONG.forceDad = false;
+							case 769:
+								warnAss();
 							case 799:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(1);
 								else
 									changeScroll(2);
+							case 802:
+								warnAss();
 							case 832:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(2);
 								else
 									changeScroll(1);
+							case 833:
+								warnAss();
 							case 863:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(1);
 								else
 									changeScroll(2);
+							case 848:
+								warnAss();
 							case 878:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(2);
 								else
 									changeScroll(1);
+							case 865:
+								warnAss();
 							case 895:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(1);
 								else
 									changeScroll(2);
+							case 882:
+								warnAss();
 							case 912:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(2);
 								else
 									changeScroll(1);
-							case 920 | 922 | 924 | 926:
+							case 890 | 892 | 894 | 896:
+								warnAss();
+							case 926:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(1);
 								else
 									changeScroll(2);
-							case 921 | 923 | 925:
+							case 891 | 893 | 895:
+								warnAss();
+							case 920:
 								if (!FlxG.save.data.downscroll)
 									changeScroll(2);
 								else
 									changeScroll(1);
 							case 928:
 								dad.playAnim("tremble",true);
+								fuckingAnimationPlaying = true;
 							case 929:
 								dad.playAnim("fall",true);
 								FlxTween.tween(boyfriend, {alpha: 0}, 3.2, { ease: FlxEase.quadOut });
@@ -4914,6 +4943,35 @@ class PlayState extends MusicBeatState
 			FlxTween.linearMotion(flot, 500, 380, 500, 600, 2, true);
 		if (flot.y == 600)
 			FlxTween.linearMotion(flot, 500, 600, 500, 380, 2, true);
+	}
+
+	function warnAss(?down:Bool = false){
+		/*var warn = new FlxSprite();
+		warn.frames = Paths.getSparrowAtlas("8bit/warning","shared");
+		warn.animation.addByPrefix("idle", "WARNING loop",24,true);
+		warn.animation.addByPrefix("end", "WARNING end",24,false);
+		warn.animation.play("idle", false);
+		warn.scale.set(6,6);
+		warn.screenCenter(X);
+		if (down)
+			warn.y = 200;
+		else
+			warn.y = -100;
+		add(warn);
+		var curShit = curStep + 30;
+		var assBull = false;
+		new FlxTimer().start(0.01, function(tmr:FlxTimer){
+			if (curShit == curStep){
+				assBull = true;
+				warn.animation.play("end", true);
+				new FlxTimer().start(0.6, function(tmddr:FlxTimer){
+					remove(warn);
+				});
+				
+			}
+			if (!assBull)
+				tmr.reset(0.01);
+		});*/
 	}
 
 	function changeScroll(?scrollVer:Int = -2):Void{

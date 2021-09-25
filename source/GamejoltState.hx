@@ -28,13 +28,13 @@ import sys.thread.Thread;
 import Discord.DiscordClient;
 #end
 
-@:file("myKey.privatekey") class MyOtherKey extends ByteArrayData { }
+//@:file("myKey.privatekey") class MyOtherKey extends ByteArrayData { }
 
 class GamejoltState extends MusicBeatState{
 	var chooseName:FlxText;
-	var bytearray:MyOtherKey;
+	//var bytearray:MyOtherKey;
 	var gameid:Int;
-	var keystring:String;
+	//var keystring:String;
 	
 	var usertoken:String;
 	var username:String;
@@ -49,7 +49,10 @@ class GamejoltState extends MusicBeatState{
 		bg.screenCenter();
 		add(bg);
 		FlxG.mouse.visible = true;
-		
+		#if windows
+		if (FlxG.save.data.discordPresence)
+			DiscordClient.changePresence("Logging in by gamejolt.", null);
+		#end
 		var gamejolt = new FlxSprite(0, 30).loadGraphic(Paths.image("8bit/gamejolt","shared"));
 		//gamejolt.scale.set(2,2);
 		gamejolt.antialiasing = false;
@@ -78,8 +81,6 @@ class GamejoltState extends MusicBeatState{
 		name.caretColor = 0xFFFFFFFF;
 
 		// gamejolt shit.
-		bytearray = new MyOtherKey();
-		keystring = bytearray.readUTFBytes(bytearray.length);
 		gameid = 643489;
 
 		//doTheFlick();
@@ -108,13 +109,11 @@ class GamejoltState extends MusicBeatState{
 					mode = "token";
 				case "token":
 					trace(name.text);
-					trace(keystring);
-					trace(gameid);
 					usertoken = name.text;
 					FlxG.save.data.token = usertoken;
 					name.visible = false;
 					changeText("Please wait...\n");
-					FlxGameJolt.init(gameid, keystring, true, username, usertoken, (logged) -> {
+					FlxGameJolt.init(gameid, FlxG.save.data.privatekey, true, username, usertoken, (logged) -> {
 						if (logged){
 							changeText("Succesfully logged in!\n");
 							GameJoltPlayerData.loadInit();

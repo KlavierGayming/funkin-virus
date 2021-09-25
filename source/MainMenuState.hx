@@ -166,6 +166,7 @@ class MainMenuState extends MusicBeatState
 		Music.antialiasing = false;
 		Music.animation.play('unselected');
 		add(Music);
+		Music.color = FlxColor.fromHSL(Music.color.hue, Music.color.saturation, 0.1, 1);
 
 		cloud = new FlxSprite(Music.x - 350, 730);
 		cloud.frames = Paths.getSparrowAtlas('8bit/clouds','shared');
@@ -198,7 +199,7 @@ class MainMenuState extends MusicBeatState
 		Freeplay.scale.set(2,2);
 		Freeplay.updateHitbox();
 		add(Freeplay);
-		if (FlxG.save.data.storyBeated)
+		if (FlxG.save.data.discoBeated)
 			Freeplay.color = FlxColor.fromHSL(Freeplay.color.hue, Freeplay.color.saturation, 1, 1);
 		else
 			Freeplay.color = FlxColor.fromHSL(Freeplay.color.hue, Freeplay.color.saturation, 0.3, 1);
@@ -383,13 +384,13 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new OptionsMenu());
 			}
 
-			if (FlxG.mouse.overlaps(hitboxMusic) && FlxG.mouse.justPressed){
+			/*if (FlxG.mouse.overlaps(hitboxMusic) && FlxG.mouse.justPressed){
 				//play(0, 'clicked');
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 				selectedSomethin = true;
 				FlxG.mouse.visible = false;
 				FlxG.switchState(new TapeState());
-			}
+			}*/
 
 			if (FlxG.mouse.overlaps(hitboxAchievement) && FlxG.mouse.justPressed){
 				//play(0, 'clicked');

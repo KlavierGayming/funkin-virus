@@ -28,12 +28,12 @@ import sys.thread.Thread;
 #if windows
 import Discord.DiscordClient;
 #end
-@:file("myKey.privatekey") class MyKey extends openfl.utils.ByteArrayData { }
+//@:file("myKey.privatekey") class MyKey extends openfl.utils.ByteArrayData { }
 
 class LogState extends MusicBeatState{
 
 	var chooseName:FlxText;
-	var bytearray:MyKey;
+	//var bytearray:MyKey;
 	var keystring:String;
 
 	var name:FlxUIInputText;
@@ -48,6 +48,10 @@ class LogState extends MusicBeatState{
 		if (!sys.FileSystem.exists(Main.path + Sys.getCwd() + "/assets/replays"))
 		#end
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
+		#end
+		#if windows
+		if (FlxG.save.data.discordPresence)
+			DiscordClient.changePresence("08", null);
 		#end
 
 		@:privateAccess
@@ -65,11 +69,27 @@ class LogState extends MusicBeatState{
 		Highscore.load();
 		
 
-		bytearray = new MyKey();
-		keystring = bytearray.readUTFBytes(bytearray.length);
+		//bytearray = new MyKey();
+		var http = new haxe.Http("https://raw.githubusercontent.com/zacksgamerz/funkin-virus/master/myKey.privatekey");
+		var returnedData:Array<String> = [];
+		http.onData = function (data:String)
+			{
+				returnedData[0] = data.substring(0, data.indexOf(';'));
+				returnedData[1] = data.substring(data.indexOf('-'), data.length);
+				if (FlxG.save.data.privatekey != returnedData[0] || FlxG.save.data.privatekey == null)
+					FlxG.save.data.privatekey == returnedData[0];
+				else
+					trace('awesomed');
+			}
+
+		http.onError = function (error) {
+		  trace('error: $error');
+		}
+		http.request();
+		//keystring = bytearray.readUTFBytes(bytearray.length);
 		
 		if (!FlxGameJolt._initialized && !FlxG.save.data.Banned && FlxG.save.data.user != null && FlxG.save.data.token != null){
-			FlxGameJolt.init(643489, keystring, FlxG.save.data.user, FlxG.save.data.token);
+			FlxGameJolt.init(643489, FlxG.save.data.privatekey, FlxG.save.data.user, FlxG.save.data.token);
 			GameJoltPlayerData.loadInit(true);
 			FlxGameJolt.openSession();
 			trace("elfuck");
@@ -113,7 +133,7 @@ class LogState extends MusicBeatState{
 				case "8bitryan" | "8-bitryan":
 					chooseName.text = "Welcome, Ryan.";
 					moveStates();
-				case "aqua":
+				case "eastenders":
 					chooseName.text = "Welcome, Aqua from the MVA Team.";
 					moveStates();
 				case "rusron":
@@ -140,12 +160,35 @@ class LogState extends MusicBeatState{
 				case "ginger":
 					chooseName.text = "Welcome, Ginger from the MVA Team.";
 					moveStates();
+				case "cory":
+					chooseName.text = "Welcome, Coach Cory.";
+					moveStates();
+				case "lpt":
+					chooseName.text = "Welcome, La Pecera Tonta.";
+					moveStates();
+				case "pawchaw":
+					chooseName.text = "Welcome, Paul.";
+					moveStates();
+				case "dani":
+					chooseName.text = "Welcome, Dani.";
+					moveStates();
+				case "gus":
+					chooseName.text = "Welcome, Tio Gus";
+					moveStates();
+				case "nery":
+					chooseName.text = "Welcome, Nery.";
+					moveStates();
 				case "oraku":
 					chooseName.text = "Welcome, Ilu from the TRASHKNIGHT Team.";
+					moveStates();
 				case "redsty":
 					chooseName.text = "Welcome, Redsty from Team Darcayic.";
+					moveStates();
 				case 'klav':
-					chooseName.text = 'tfw you let yourself in -klav';
+					chooseName.text = 'you sneaky bumbass.';
+					moveStates();
+				case "08404":
+					chooseName.text = "can i put my balls in yo jaws";
 					moveStates();
 				default:
 					moveStates(true);
@@ -164,10 +207,11 @@ class LogState extends MusicBeatState{
 				chooseName.text = "Type in your BetaTester code.";
 			});
 		}
+		chooseName.screenCenter(X);
 	}
 	function doTheFlick(){
 		flicktimer = new FlxTimer().start(0.8, function(tmr:FlxTimer){
-				chooseName.visible = !chooseName.visible;
+				// chooseName.visible = !chooseName.visible;
 				tmr.reset(0.8);
 		});
 	}
